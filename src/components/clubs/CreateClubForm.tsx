@@ -17,23 +17,10 @@ export default function CreateClubForm({ userId }: { userId: string }) {
     setLoading(true);
     setError(null);
 
-    // Ensure profile exists before inserting club (FK constraint)
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const username =
-        user.user_metadata?.full_name ??
-        user.user_metadata?.name ??
-        user.email?.split("@")[0] ??
-        `user_${user.id.slice(0, 8)}`;
-      await supabase
-        .from("profiles")
-        .upsert({ id: user.id, username }, { onConflict: "id", ignoreDuplicates: true });
-    }
-
     const { data, error } = await supabase
       .from("clubs")
       .insert({ name, description, owner_id: userId })
-      .select("id")
+      .select("invite_code")
       .single();
 
     if (error) {
@@ -43,7 +30,7 @@ export default function CreateClubForm({ userId }: { userId: string }) {
       return;
     }
 
-    router.push(`/clubs/${data.id}`);
+    router.push(`/clubs/${data.invite_code}`);
     router.refresh();
     setLoading(false);
   }
