@@ -154,7 +154,14 @@ export default async function MovieDetailPage({
           <NominateButton
             sessionId={session.id}
             userId={user.id}
-            movie={{ id: movie.id, title: movie.title, poster_url: posterStoreUrl }}
+            movie={{
+              id: movie.id,
+              title: movie.title,
+              poster_url: posterStoreUrl,
+              genres: (movie.genres ?? []).map((g: any) => g.name as string),
+              release_year: movie.release_date ? Number((movie.release_date as string).slice(0, 4)) : null,
+              director: directors[0]?.name ?? null,
+            }}
             initialNominated={alreadyNominated}
             hasOtherNomination={hasOtherNomination}
             backUrl={`/clubs/${slug}/session/discover`}

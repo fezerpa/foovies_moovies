@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { NominationWithVotes } from '@/types/database'
 import RatingModal from './RatingModal'
+import RecommendationsButton from '@/components/club/RecommendationsButton'
 
 type Movie = {
   id: number
@@ -466,7 +467,7 @@ export default function SessionView({
               <div className="mb-8">
                 <Link
                   href={`/clubs/${clubSlug}/session/discover`}
-                  className="mb-5 flex items-center justify-between rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4 transition hover:border-gray-600"
+                  className="mb-3 flex items-center justify-between rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4 transition hover:border-gray-600"
                 >
                   <div>
                     <p className="font-medium">Ver catálogo de películas</p>
@@ -474,6 +475,15 @@ export default function SessionView({
                   </div>
                   <span className="text-lg text-gray-500">→</span>
                 </Link>
+
+                <div className="mb-5">
+                  <RecommendationsButton
+                    clubId={clubId}
+                    clubSlug={clubSlug}
+                    sessionId={session.id}
+                    userId={userId}
+                  />
+                </div>
 
                 <label className="mb-2 block text-sm font-medium text-gray-400">
                   Nominar una película

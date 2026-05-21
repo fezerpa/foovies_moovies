@@ -7,7 +7,14 @@ import { createClient } from '@/lib/supabase/client'
 type Props = {
   sessionId: string
   userId: string
-  movie: { id: number; title: string; poster_url: string | null }
+  movie: {
+    id: number
+    title: string
+    poster_url: string | null
+    genres: string[]
+    release_year: number | null
+    director: string | null
+  }
   initialNominated: boolean
   hasOtherNomination: boolean
   backUrl: string
@@ -45,6 +52,9 @@ export default function NominateButton({ sessionId, userId, movie, initialNomina
       tmdb_movie_id: movie.id,
       title: movie.title,
       poster_url: movie.poster_url,
+      genres: movie.genres,
+      release_year: movie.release_year,
+      director: movie.director,
     })
     if (!error || error.code === '23505') {
       setNominated(true)
