@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import SessionListener from '@/components/club/SessionListener'
+import DeleteClubButton from '@/components/club/DeleteClubButton'
 
 export default async function ClubPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: slug } = await params
@@ -105,9 +106,12 @@ export default async function ClubPage({ params }: { params: Promise<{ id: strin
           )}
         </div>
         {isOwner && (
-          <span className="shrink-0 rounded-full bg-pink-900/50 px-3 py-1 text-sm text-pink-300">
-            Owner
-          </span>
+          <div className="flex shrink-0 items-center gap-2">
+            <span className="rounded-full bg-pink-900/50 px-3 py-1 text-sm text-pink-300">
+              Owner
+            </span>
+            <DeleteClubButton clubId={clubId} />
+          </div>
         )}
       </div>
 
