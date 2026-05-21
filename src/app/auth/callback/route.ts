@@ -8,6 +8,20 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = await createClient()
     await supabase.auth.exchangeCodeForSession(code)
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      const username =
+        user.user_metadata?.full_name ??
+        user.user_metadata?.name ??
+        user.email?.split('@')[0] ??
+        `user_${user.id.slice(0, 8)}`
+
+      await supabase.from('profiles').upsert(
+        { id: user.id, username },
+        { onConflict: 'id', ignoreDuplicates: true }
+      )
+    }
   }
 
   return NextResponse.redirect(`${origin}/clubs`)
