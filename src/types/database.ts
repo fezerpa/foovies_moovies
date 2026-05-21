@@ -26,6 +26,7 @@ export type Database = {
           username?: string
           avatar_url?: string | null
         }
+        Relationships: []
       }
       clubs: {
         Row: {
@@ -51,6 +52,15 @@ export type Database = {
           description?: string | null
           cover_url?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: 'clubs_owner_id_fkey'
+            columns: ['owner_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
       }
       club_members: {
         Row: {
@@ -70,6 +80,22 @@ export type Database = {
         Update: {
           role?: 'owner' | 'member'
         }
+        Relationships: [
+          {
+            foreignKeyName: 'club_members_club_id_fkey'
+            columns: ['club_id']
+            isOneToOne: false
+            referencedRelation: 'clubs'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'club_members_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
       }
       sessions: {
         Row: {
@@ -96,6 +122,15 @@ export type Database = {
           winner_tmdb_id?: number | null
           watched_at?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: 'sessions_club_id_fkey'
+            columns: ['club_id']
+            isOneToOne: false
+            referencedRelation: 'clubs'
+            referencedColumns: ['id']
+          }
+        ]
       }
       nominations: {
         Row: {
@@ -116,7 +151,25 @@ export type Database = {
           poster_url?: string | null
           created_at?: string
         }
-        Update: never
+        Update: {
+          [_ in never]: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'nominations_session_id_fkey'
+            columns: ['session_id']
+            isOneToOne: false
+            referencedRelation: 'sessions'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'nominations_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
       }
       votes: {
         Row: {
@@ -133,7 +186,25 @@ export type Database = {
           user_id: string
           created_at?: string
         }
-        Update: never
+        Update: {
+          [_ in never]: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'votes_session_id_fkey'
+            columns: ['session_id']
+            isOneToOne: false
+            referencedRelation: 'sessions'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'votes_nomination_id_fkey'
+            columns: ['nomination_id']
+            isOneToOne: false
+            referencedRelation: 'nominations'
+            referencedColumns: ['id']
+          }
+        ]
       }
       session_ratings: {
         Row: {
@@ -153,6 +224,22 @@ export type Database = {
         Update: {
           rating?: number
         }
+        Relationships: [
+          {
+            foreignKeyName: 'session_ratings_session_id_fkey'
+            columns: ['session_id']
+            isOneToOne: false
+            referencedRelation: 'sessions'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'session_ratings_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
       }
     }
     Views: {
@@ -166,7 +253,17 @@ export type Database = {
           nominated_by: string
           vote_count: number
         }
+        Relationships: []
       }
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
     }
   }
 }
