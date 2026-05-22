@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import LeaveClubButton from "./LeaveClubButton";
@@ -125,10 +126,10 @@ export default function ProfileForm({ userId, initialUsername, avatarUrl, clubs 
           <ul className="divide-y divide-gray-800">
             {clubs.map((club) => (
               <li key={club.id} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
-                <div>
+                <Link href={`/clubs/${club.invite_code}`} className="transition hover:opacity-80">
                   <p className="text-sm font-medium">{club.name}</p>
                   <p className="text-xs text-gray-500 capitalize">{club.role}</p>
-                </div>
+                </Link>
                 {club.role === "owner" ? (
                   <span className="text-xs text-gray-600">Propietario</span>
                 ) : (

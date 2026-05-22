@@ -2,17 +2,12 @@ import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <footer className="mt-20 border-t border-gray-800 bg-gray-950">
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <Link href="/" className="text-lg font-bold text-white">
-            Foovies
-          </Link>
-          <nav className="flex gap-6 text-sm text-gray-500">
-            <Link href="/clubs" className="transition hover:text-white">Mis clubs</Link>
-            <Link href="/contact" className="transition hover:text-white">Contacto</Link>
-          </nav>
+    <footer className="border-t border-gray-800 bg-gray-950">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5">
+        <Link href="/" className="text-sm font-bold text-white">Foovies</Link>
+        <div className="flex flex-col items-end gap-0.5">
           <p className="text-xs text-gray-600">© {new Date().getFullYear()} Foovies</p>
+          <Link href="/contact" className="text-xs text-gray-500 transition hover:text-white">Contacto</Link>
         </div>
       </div>
     </footer>
