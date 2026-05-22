@@ -21,6 +21,10 @@ export async function GET(request: Request) {
         { id: user.id, username },
         { onConflict: 'id', ignoreDuplicates: true }
       )
+
+      if (!user.user_metadata?.onboarding_completed) {
+        return NextResponse.redirect(`${origin}/onboarding`)
+      }
     }
   }
 
