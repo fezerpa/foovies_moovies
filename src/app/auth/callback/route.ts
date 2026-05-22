@@ -18,7 +18,7 @@ export async function GET(request: Request) {
         `user_${user.id.slice(0, 8)}`
 
       await supabase.from('profiles').upsert(
-        { id: user.id, username },
+        { id: user.id, username, avatar_url: user.user_metadata?.avatar_url ?? null },
         { onConflict: 'id', ignoreDuplicates: true }
       )
 

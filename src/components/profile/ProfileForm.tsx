@@ -59,7 +59,11 @@ export default function ProfileForm({ userId, initialUsername, avatarUrl, clubs 
     }
 
     const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
-    await supabase.auth.updateUser({ data: { avatar_url: publicUrl } });
+    await Promise.all([
+      supabase.auth.updateUser({ data: { avatar_url: publicUrl } }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (supabase.from("profiles") as any).update({ avatar_url: publicUrl }).eq("id", userId),
+    ]);
     setAvatar(publicUrl);
     setUploading(false);
     router.refresh();

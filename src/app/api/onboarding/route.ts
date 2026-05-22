@@ -53,6 +53,12 @@ export async function POST(req: NextRequest) {
 
   const taste_summary = (message.choices[0].message.content ?? '').trim()
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase.from('profiles') as any).update({
+    taste_summary,
+    taste_movies: enriched,
+  }).eq('id', user.id)
+
   return NextResponse.json({
     taste_summary,
     enriched_movies: enriched,
