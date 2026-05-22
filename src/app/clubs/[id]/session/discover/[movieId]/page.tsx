@@ -4,6 +4,7 @@ import Link from 'next/link'
 import NominateButton from '@/components/session/NominateButton'
 import CastSlider from '@/components/session/CastSlider'
 import MovieHero from '@/components/session/MovieHero'
+import MovieProviders from '@/components/session/MovieProviders'
 
 async function fetchMovieDetails(movieId: string) {
   const res = await fetch(
@@ -148,6 +149,8 @@ export default async function MovieDetailPage({
           </div>
         </div>
       </div>
+
+      <MovieProviders movieId={movieId} />
 
       {session && (
         <div className="mb-8">
