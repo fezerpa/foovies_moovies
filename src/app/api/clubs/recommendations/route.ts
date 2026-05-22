@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import Groq from 'groq-sdk'
 import { createClient } from '@/lib/supabase/server'
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 const TMDB = { headers: { Authorization: `Bearer ${process.env.TMDB_API_KEY}` } }
 
 async function tmdb(path: string) {
@@ -11,6 +10,7 @@ async function tmdb(path: string) {
 }
 
 export async function POST(req: NextRequest) {
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
