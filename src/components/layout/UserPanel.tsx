@@ -66,7 +66,7 @@ export default async function UserPanel() {
       <div className="mt-3 h-px bg-gray-800" />
 
       <form action="/auth/signout" method="post" className="mt-3">
-        <button className="w-full text-left text-xs text-gray-500 transition hover:text-white">
+        <button className="w-full btn-primary py-2.5 text-sm font-semibold">
           Cerrar sesión
         </button>
       </form>
