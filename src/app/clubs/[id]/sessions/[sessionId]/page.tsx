@@ -118,7 +118,7 @@ export default async function SessionDetailPage({
         </div>
       </div>
 
-      <div className="mt-8 rounded-2xl border border-gray-800 bg-gray-900 p-5">
+      <div className="mt-8 card p-5">
         <h2 className="mb-4 font-semibold">Puntuaciones</h2>
         <ul className="divide-y divide-gray-800">
           {members?.map((m) => {

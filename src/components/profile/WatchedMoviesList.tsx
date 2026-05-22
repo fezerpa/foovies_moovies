@@ -106,12 +106,12 @@ export default function WatchedMoviesList({ initialSessions, initialHasMore }: P
             <Link
               key={s.id}
               href={`/clubs/${s.club_slug}/sessions/${s.id}`}
-              className="relative flex flex-col overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 transition hover:border-gray-700"
+              className="movie-card"
             >
               {inner}
             </Link>
           ) : (
-            <div key={s.id} className="relative flex flex-col overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
+            <div key={s.id} className="relative flex flex-col overflow-hidden card">
               {inner}
             </div>
           );

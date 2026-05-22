@@ -36,7 +36,7 @@ export default async function ClubsPage() {
             <Link
               key={club.id}
               href={`/clubs/${club.invite_code}`}
-              className="group rounded-2xl border border-gray-800 bg-gray-900 p-5 transition hover:border-pink-800 hover:bg-gray-800"
+              className="group card p-5 transition hover:border-pink-800 hover:bg-gray-800"
             >
               <div className="mb-1 flex items-center justify-between">
                 <h2 className="font-semibold text-lg">{club.name}</h2>
@@ -58,11 +58,11 @@ export default async function ClubsPage() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+        <div className="card p-5">
           <h3 className="mb-4 font-semibold">Crear club</h3>
           <CreateClubForm userId={user.id} />
         </div>
-        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+        <div className="card p-5">
           <h3 className="mb-4 font-semibold">Unirse con código</h3>
           <JoinClubForm userId={user.id} />
         </div>

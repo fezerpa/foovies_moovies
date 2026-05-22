@@ -189,7 +189,7 @@ export default function OnboardingFlow() {
 
       <div className="space-y-4">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+          <div key={i} className="card p-4">
             <p className="mb-3 text-xs font-medium uppercase tracking-widest text-gray-500">
               Película {i + 1}
             </p>
@@ -216,7 +216,7 @@ export default function OnboardingFlow() {
       <button
         onClick={handleSubmit}
         disabled={!canSubmit || generating}
-        className="mt-6 w-full rounded-xl bg-pink-600 py-3 font-semibold transition hover:bg-pink-500 disabled:cursor-not-allowed disabled:opacity-40"
+ className="mt-6 w-full btn-primary py-3 font-semibold disabled:cursor-not-allowed disabled:opacity-40"
       >
         {generating ? (
           <span className="flex items-center justify-center gap-2">

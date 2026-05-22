@@ -8,7 +8,7 @@ export default function NotFound() {
       <p className="mb-8 text-gray-400">La página que buscas no existe o ha sido movida.</p>
       <Link
         href="/clubs"
-        className="rounded-xl bg-pink-600 px-5 py-2.5 text-sm font-semibold transition hover:bg-pink-500"
+ className="btn-primary px-5 py-2.5 text-sm font-semibold"
       >
         Ir a mis clubs
       </Link>

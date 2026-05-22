@@ -4,6 +4,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .container {
+    @apply mx-auto max-w-4xl px-4 py-12;
+  }
+  .card {
+    @apply rounded-2xl border border-gray-800 bg-gray-900;
+  }
+  .movie-card {
+    @apply relative flex flex-col overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 transition hover:border-gray-700;
+  }
+  .btn-primary {
+    @apply rounded-xl bg-pink-600 transition hover:bg-pink-500;
+  }
+}
+
 @layer base {
   .theme {
     --font-heading: var(--font-sans);

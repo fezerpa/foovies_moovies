@@ -86,7 +86,7 @@ export default async function ProfilePage() {
 
       {/* Taste profile */}
       {(tasteSummary || tasteMovies.length > 0) && (
-        <div className="mt-8 rounded-2xl border border-gray-800 bg-gray-900 p-6">
+        <div className="mt-8 card p-6">
           <h2 className="mb-4 font-semibold">Perfil cinematográfico</h2>
           {tasteSummary && (
             <p className="mb-5 text-sm leading-relaxed text-gray-300 italic">"{tasteSummary}"</p>

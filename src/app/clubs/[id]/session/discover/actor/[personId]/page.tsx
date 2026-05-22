@@ -145,7 +145,7 @@ export default async function ActorDetailPage({
               <Link
                 key={movie.id}
                 href={`/clubs/${slug}/session/discover/${movie.id as number}`}
-                className="flex flex-col overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 transition hover:border-gray-700"
+                className="flex flex-col overflow-hidden card transition hover:border-gray-700"
               >
                 {movie.poster_path ? (
                   <img

@@ -26,7 +26,7 @@ export default async function UserPanel() {
     ?? 'Usuario'
   const avatarUrl = (user.user_metadata?.avatar_url as string | undefined) ?? null
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+    <div className="card p-4">
       {/* User info */}
       <Link href="/profile" className="mb-4 flex items-center gap-3 transition hover:opacity-80">
         <Avatar src={avatarUrl} alt={username} className="h-10 w-10 shrink-0 rounded-full ring-2 ring-gray-700" />

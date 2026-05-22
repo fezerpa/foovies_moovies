@@ -34,7 +34,7 @@ export default async function Header() {
         ) : (
           <Link
             href="/auth"
-            className="rounded-xl bg-pink-600 px-4 py-2 text-sm font-semibold transition hover:bg-pink-500"
+ className="btn-primary px-4 py-2 text-sm font-semibold"
           >
             Iniciar sesión
           </Link>

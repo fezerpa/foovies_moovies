@@ -20,7 +20,7 @@ export default async function HomePage() {
           {user ? (
             <Link
               href="/clubs"
-              className="rounded-xl bg-pink-600 px-8 py-3 font-semibold text-white transition hover:bg-pink-500"
+ className="btn-primary px-8 py-3 font-semibold text-white"
             >
               Ver mis clubs
             </Link>
@@ -28,7 +28,7 @@ export default async function HomePage() {
             <>
               <Link
                 href="/auth"
-                className="rounded-xl bg-pink-600 px-8 py-3 font-semibold text-white transition hover:bg-pink-500"
+ className="btn-primary px-8 py-3 font-semibold text-white"
               >
                 Empezar gratis
               </Link>

@@ -388,7 +388,7 @@ export default function DiscoverView({
       <h1 className="mt-6 mb-8 text-3xl font-bold">Descubrir películas</h1>
 
       {/* Filters */}
-      <div ref={filtersPanelRef} className="mb-8 rounded-2xl border border-gray-800 bg-gray-900 p-5">
+      <div ref={filtersPanelRef} className="mb-8 card p-5">
 
         {/* Location-based filters */}
         {countryCode && (
@@ -585,7 +585,7 @@ export default function DiscoverView({
             type="button"
             onClick={clearFilters}
             disabled={!isFiltered}
-            className="h-10 flex-1 rounded-xl bg-pink-600 font-semibold transition hover:bg-pink-500 disabled:cursor-not-allowed disabled:opacity-40"
+ className="h-10 flex-1 btn-primary font-semibold disabled:cursor-not-allowed disabled:opacity-40"
           >
             Limpiar filtros
           </button>
@@ -603,7 +603,7 @@ export default function DiscoverView({
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900"
+              className="overflow-hidden card"
             >
               <div className="aspect-[2/3] w-full animate-pulse bg-gray-800" />
               <div className="p-3">
@@ -626,7 +626,7 @@ export default function DiscoverView({
               return (
                 <div
                   key={movie.id}
-                  className="relative flex flex-col overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 transition hover:border-gray-700"
+                  className="movie-card"
                 >
                   <Link
                     href={`/clubs/${clubSlug}/session/discover/${movie.id}`}

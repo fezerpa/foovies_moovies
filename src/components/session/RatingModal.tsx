@@ -55,7 +55,7 @@ export default function RatingModal({ movieTitle, posterUrl, onSubmit, onSkip, l
         <button
           onClick={() => selected !== null && onSubmit(selected)}
           disabled={selected === null || loading}
-          className="mb-2 w-full rounded-xl bg-pink-600 py-3 font-semibold transition hover:bg-pink-500 disabled:opacity-50"
+ className="mb-2 w-full btn-primary py-3 font-semibold disabled:opacity-50"
         >
           {loading ? 'Guardando...' : 'Enviar puntuación'}
         </button>

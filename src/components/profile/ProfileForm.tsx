@@ -67,7 +67,7 @@ export default function ProfileForm({ userId, initialUsername, avatarUrl, clubs 
   return (
     <div className="space-y-8">
       {/* Avatar + name */}
-      <div className="rounded-2xl border border-gray-800 bg-gray-900 p-6">
+      <div className="card p-6">
         <h2 className="mb-5 font-semibold">Perfil</h2>
 
         <div className="mb-6 flex items-center gap-5">
@@ -109,7 +109,7 @@ export default function ProfileForm({ userId, initialUsername, avatarUrl, clubs 
           <button
             type="submit"
             disabled={saving || username.trim() === initialUsername}
-            className="h-10 rounded-xl bg-pink-600 px-4 text-sm font-semibold transition hover:bg-pink-500 disabled:opacity-50"
+ className="h-10 btn-primary px-4 text-sm font-semibold disabled:opacity-50"
           >
             {saving ? "Guardando..." : saved ? "✓ Guardado" : "Guardar"}
           </button>
@@ -117,7 +117,7 @@ export default function ProfileForm({ userId, initialUsername, avatarUrl, clubs 
       </div>
 
       {/* Clubs */}
-      <div className="rounded-2xl border border-gray-800 bg-gray-900 p-6">
+      <div className="card p-6">
         <h2 className="mb-4 font-semibold">Mis clubs</h2>
         {clubs.length === 0 ? (
           <p className="text-sm text-gray-500">Todavía no perteneces a ningún club.</p>

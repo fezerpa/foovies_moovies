@@ -370,7 +370,7 @@ export default function SessionView({
 
         {/* Sin sesión */}
         {!session && (
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-10 text-center">
+          <div className="card p-10 text-center">
             {isOwner ? (
               <>
                 <p className="mb-5 text-gray-400">
@@ -379,7 +379,7 @@ export default function SessionView({
                 <button
                   onClick={handleCreateSession}
                   disabled={creatingSession}
-                  className="rounded-xl bg-pink-600 px-6 py-2.5 font-semibold transition hover:bg-pink-500 disabled:opacity-60"
+ className="btn-primary px-6 py-2.5 font-semibold disabled:opacity-60"
                 >
                   {creatingSession ? 'Creando...' : 'Crear sesión'}
                 </button>
@@ -467,7 +467,7 @@ export default function SessionView({
               <div className="mb-8">
                 <Link
                   href={`/clubs/${clubSlug}/session/discover`}
-                  className="mb-3 flex items-center justify-between rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4 transition hover:border-gray-600"
+                  className="mb-3 flex items-center justify-between card px-5 py-4 transition hover:border-gray-600"
                 >
                   <div>
                     <p className="font-medium">Ver catálogo de películas</p>

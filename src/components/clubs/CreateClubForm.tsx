@@ -56,7 +56,7 @@ export default function CreateClubForm({ userId }: { userId: string }) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-pink-600 py-2.5 text-sm font-semibold transition hover:bg-pink-500 disabled:opacity-60"
+ className="w-full btn-primary py-2.5 text-sm font-semibold disabled:opacity-60"
       >
         {loading ? "Creando..." : "Crear club"}
       </button>

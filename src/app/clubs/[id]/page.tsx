@@ -116,7 +116,7 @@ export default async function ClubPage({ params }: { params: Promise<{ id: strin
       </div>
 
       {/* Código de invitación */}
-      <div className="mb-6 rounded-2xl border border-gray-800 bg-gray-900 p-5">
+      <div className="mb-6 card p-5">
         <p className="mb-1 text-xs font-medium uppercase tracking-widest text-gray-500">
           Código de invitación
         </p>
@@ -130,7 +130,7 @@ export default async function ClubPage({ params }: { params: Promise<{ id: strin
 
       {/* Sesión de votación */}
       {(isOwner || !!openSession) && (
-        <div className="mb-6 rounded-2xl border border-gray-800 bg-gray-900 p-5">
+        <div className="mb-6 card p-5">
           <h2 className="mb-4 font-semibold">Sesión de votación</h2>
           {openSession ? (
             <div className="flex items-center justify-between gap-4">
@@ -147,7 +147,7 @@ export default async function ClubPage({ params }: { params: Promise<{ id: strin
                 </Link>
                 <Link
                   href={`/clubs/${slug}/session`}
-                  className="rounded-xl bg-pink-600 px-5 py-2 text-sm font-semibold transition hover:bg-pink-500"
+ className="btn-primary px-5 py-2 text-sm font-semibold"
                 >
                   Ir a la sesión →
                 </Link>
@@ -157,7 +157,7 @@ export default async function ClubPage({ params }: { params: Promise<{ id: strin
             <form action={createSession}>
               <button
                 type="submit"
-                className="rounded-xl bg-pink-600 px-5 py-2.5 text-sm font-semibold transition hover:bg-pink-500"
+ className="btn-primary px-5 py-2.5 text-sm font-semibold"
               >
                 Crear nueva sesión
               </button>
@@ -167,7 +167,7 @@ export default async function ClubPage({ params }: { params: Promise<{ id: strin
       )}
 
       {/* Películas vistas */}
-      <div className="mb-6 rounded-2xl border border-gray-800 bg-gray-900 p-5">
+      <div className="mb-6 card p-5">
         <h2 className="mb-4 font-semibold">
           Películas vistas{' '}
           <span className="text-gray-500">({watchedSessions?.length ?? 0})</span>
@@ -241,7 +241,7 @@ export default async function ClubPage({ params }: { params: Promise<{ id: strin
       </div>
 
       {/* Lista de miembros */}
-      <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+      <div className="card p-5">
         <h2 className="mb-4 font-semibold">
           Miembros{' '}
           <span className="text-gray-500">({members?.length ?? 0})</span>
