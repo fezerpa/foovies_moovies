@@ -6,7 +6,7 @@
 
 @layer components {
   .container {
-    @apply mx-auto max-w-4xl px-4 py-12;
+    @apply py-12;
   }
   .card {
     @apply rounded-2xl border border-gray-800 bg-gray-900;

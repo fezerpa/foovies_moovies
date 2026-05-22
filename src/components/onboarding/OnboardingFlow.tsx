@@ -179,7 +179,7 @@ export default function OnboardingFlow() {
   }
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-12">
+    <div className="container">
       <div className="mb-8 text-center">
         <h1 className="mb-2 text-3xl font-bold">¡Bienvenido a Foovies!</h1>
         <p className="text-gray-400">

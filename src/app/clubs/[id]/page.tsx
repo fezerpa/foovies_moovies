@@ -89,7 +89,7 @@ export default async function ClubPage({ params }: { params: Promise<{ id: strin
   }
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-12">
+    <main className="container">
       <SessionListener clubId={clubId} />
       <Link
         href="/clubs"
