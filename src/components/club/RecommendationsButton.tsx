@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { getCountryCode } from "@/lib/geolocation";
 
 type Recommendation = {
   title: string;
@@ -12,6 +13,9 @@ type Recommendation = {
   reason: string;
   tmdb_id: number | null;
   poster_url: string | null;
+  providers: string[];
+  watch_url: string | null;
+  in_theaters: boolean;
 };
 
 type Props = {
@@ -29,6 +33,7 @@ export default function RecommendationsButton({
 }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState<"geo" | "ai">("geo");
   const [recs, setRecs] = useState<Recommendation[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [nominated, setNominated] = useState<Record<number, boolean>>({});
@@ -37,13 +42,18 @@ export default function RecommendationsButton({
 
   async function fetchRecommendations() {
     setLoading(true);
+    setLoadingStep("geo");
     setError(null);
     setRecs([]);
     setOpen(true);
+
+    const countryCode = await getCountryCode();
+
+    setLoadingStep("ai");
     const res = await fetch("/api/clubs/recommendations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ clubId }),
+      body: JSON.stringify({ clubId, countryCode }),
     });
     const json = await res.json();
     if (!res.ok) setError(json.error ?? "Error al obtener recomendaciones.");
@@ -95,7 +105,11 @@ export default function RecommendationsButton({
             {loading && (
               <div className="flex flex-col items-center gap-3 py-10 text-gray-400">
                 <div className="h-6 w-6 animate-spin rounded-full border-2 border-pink-500 border-t-transparent" />
-                <p className="text-sm">Analizando vuestras preferencias...</p>
+                <p className="text-sm">
+                  {loadingStep === "geo"
+                    ? "Detectando tu ubicación..."
+                    : "Analizando vuestras preferencias..."}
+                </p>
               </div>
             )}
 
@@ -110,10 +124,10 @@ export default function RecommendationsButton({
                 {recs.map((r, i) => (
                   <li
                     key={i}
-                    className="rounded-xl border border-gray-800 bg-gray-900 overflow-hidden"
+                    className="overflow-hidden rounded-xl border border-gray-800 bg-gray-900"
                   >
                     <div className="flex gap-3 p-4">
-                      {/* Poster — clickable */}
+                      {/* Poster */}
                       {r.tmdb_id ? (
                         <Link
                           href={`/clubs/${clubSlug}/session/discover/${r.tmdb_id}`}
@@ -134,13 +148,13 @@ export default function RecommendationsButton({
                         <div className="h-20 w-14 shrink-0 rounded-lg bg-gray-800" />
                       )}
 
-                      {/* Info — clickable */}
+                      {/* Info */}
                       <div className="min-w-0 flex-1">
                         {r.tmdb_id ? (
                           <Link
                             href={`/clubs/${clubSlug}/session/discover/${r.tmdb_id}`}
                             onClick={() => setOpen(false)}
-                            className="block hover:text-pink-400 transition"
+                            className="block transition hover:text-pink-400"
                           >
                             <p className="font-semibold leading-tight">
                               {r.title}
@@ -154,6 +168,8 @@ export default function RecommendationsButton({
                         <p className="mt-0.5 text-xs text-gray-500">
                           {r.year} · {r.director}
                         </p>
+
+                        {/* Genres */}
                         <div className="mt-1 flex flex-wrap gap-1">
                           {r.genres?.map((g) => (
                             <span
@@ -164,6 +180,38 @@ export default function RecommendationsButton({
                             </span>
                           ))}
                         </div>
+
+                        {/* Availability */}
+                        {(r.in_theaters || r.providers?.length > 0) && (
+                          <div className="mt-1.5 flex flex-wrap gap-1">
+                            {r.in_theaters && (
+                              <span className="rounded-full border border-emerald-800 bg-emerald-900/40 px-2 py-0.5 text-xs text-emerald-400">
+                                En cines
+                              </span>
+                            )}
+                            {r.providers?.map((p) =>
+                              r.watch_url ? (
+                                <a
+                                  key={p}
+                                  href={r.watch_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="rounded-full border border-blue-800/50 bg-blue-900/30 px-2 py-0.5 text-xs text-blue-400 transition hover:border-blue-600 hover:text-blue-300"
+                                >
+                                  {p}
+                                </a>
+                              ) : (
+                                <span
+                                  key={p}
+                                  className="rounded-full border border-blue-800/50 bg-blue-900/30 px-2 py-0.5 text-xs text-blue-400"
+                                >
+                                  {p}
+                                </span>
+                              )
+                            )}
+                          </div>
+                        )}
+
                         <p className="mt-1.5 text-xs text-gray-400">
                           {r.reason}
                         </p>

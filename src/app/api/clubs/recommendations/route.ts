@@ -3,13 +3,19 @@ import Groq from 'groq-sdk'
 import { createClient } from '@/lib/supabase/server'
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+const TMDB = { headers: { Authorization: `Bearer ${process.env.TMDB_API_KEY}` } }
+
+async function tmdb(path: string) {
+  const res = await fetch(`https://api.themoviedb.org/3${path}`, TMDB)
+  return res.json()
+}
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { clubId } = await req.json()
+  const { clubId, countryCode } = await req.json()
   if (!clubId) return NextResponse.json({ error: 'clubId required' }, { status: 400 })
 
   const { data: membership } = await supabase
@@ -21,7 +27,6 @@ export async function POST(req: NextRequest) {
 
   if (!membership) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  // Fetch watched sessions with nominations and ratings
   const { data: sessions } = await supabase
     .from('sessions')
     .select('id, winner_tmdb_id, nominations(title, genres, release_year, director, tmdb_movie_id)')
@@ -38,18 +43,16 @@ export async function POST(req: NextRequest) {
     .select('session_id, rating')
     .in('session_id', sessionIds)
 
-  // Build average rating per session
-  const avgBySession: Record<string, number> = {}
   const ratingGroups: Record<string, number[]> = {}
   for (const r of ratings ?? []) {
     if (!ratingGroups[r.session_id]) ratingGroups[r.session_id] = []
     ratingGroups[r.session_id].push(r.rating)
   }
+  const avgBySession: Record<string, number> = {}
   for (const [sid, vals] of Object.entries(ratingGroups)) {
     avgBySession[sid] = vals.reduce((a, b) => a + b, 0) / vals.length
   }
 
-  // Build movie list for prompt
   const watchedMovies = sessions.map((s) => {
     const noms = s.nominations as Array<{
       title: string
@@ -82,12 +85,55 @@ export async function POST(req: NextRequest) {
 
   const titlesWatched = watchedMovies.map((m) => m.title).join(', ')
 
+  // Fetch now-playing movies + streaming providers for the user's country
+  let cinemaContext = ''
+  const nowPlayingIds = new Set<number>()
+
+  if (countryCode) {
+    try {
+      const npData = await tmdb(`/movie/now_playing?language=es-ES&region=${countryCode}&page=1`)
+      const nowPlaying: Array<{ id: number; title: string; release_date: string }> =
+        (npData.results ?? []).slice(0, 10)
+
+      for (const m of nowPlaying) nowPlayingIds.add(m.id)
+
+      if (nowPlaying.length > 0) {
+        const withProviders = await Promise.all(
+          nowPlaying.map(async (movie) => {
+            try {
+              const pvData = await tmdb(`/movie/${movie.id}/watch/providers`)
+              const cp = pvData.results?.[countryCode]
+              const streaming: string[] = (cp?.flatrate ?? [])
+                .slice(0, 3)
+                .map((p: { provider_name: string }) => p.provider_name)
+              return { title: movie.title, year: movie.release_date?.slice(0, 4) ?? null, streaming }
+            } catch {
+              return { title: movie.title, year: null, streaming: [] as string[] }
+            }
+          })
+        )
+
+        const lines = withProviders
+          .map((m) => {
+            const platform =
+              m.streaming.length > 0 ? `Streaming: ${m.streaming.join(', ')}` : 'Solo en cines'
+            return `- "${m.title}"${m.year ? ` (${m.year})` : ''}: ${platform}`
+          })
+          .join('\n')
+
+        cinemaContext = `\nPelículas actualmente en cartelera en ${countryCode}:\n${lines}\nSi alguna de estas encaja con los gustos del club, puedes incluirla entre las recomendaciones.\n`
+      }
+    } catch {
+      // proceed without cinema context
+    }
+  }
+
   const prompt = `Eres un experto en cine. Este club de cine ha visto las siguientes películas con sus puntuaciones:
 
 ${movieLines}
 
 Basándote en sus gustos (géneros, épocas, directores y puntuaciones), recomienda exactamente 5 películas que probablemente les encantarían. No incluyas ninguna de las que ya han visto: ${titlesWatched}.
-
+${cinemaContext}
 Responde SOLO con un array JSON con este formato exacto, sin texto adicional:
 [
   { "title": "Título", "year": 2001, "director": "Nombre Director", "genres": ["Género1", "Género2"], "reason": "Una frase explicando por qué les gustará." },
@@ -107,25 +153,43 @@ Responde SOLO con un array JSON con este formato exacto, sin texto adicional:
     const raw: Array<{ title: string; year: number; director: string; genres: string[]; reason: string }> =
       jsonMatch ? JSON.parse(jsonMatch[0]) : []
 
-    // Enrich each recommendation with TMDB data
     const recommendations = await Promise.all(
       raw.map(async (rec) => {
         try {
-          const searchRes = await fetch(
-            `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(rec.title)}&year=${rec.year}&language=es-ES`,
-            { headers: { Authorization: `Bearer ${process.env.TMDB_API_KEY}` } }
+          const searchData = await tmdb(
+            `/search/movie?query=${encodeURIComponent(rec.title)}&year=${rec.year}&language=es-ES`
           )
-          const searchData = await searchRes.json()
           const match = searchData.results?.[0]
+
+          let providers: string[] = []
+          let watch_url: string | null = null
+          const in_theaters = match?.id ? nowPlayingIds.has(match.id) : false
+
+          if (match?.id && countryCode) {
+            try {
+              const pvData = await tmdb(`/movie/${match.id}/watch/providers`)
+              const cp = pvData.results?.[countryCode]
+              watch_url = cp?.link ?? null
+              providers = ((cp?.flatrate ?? cp?.rent) ?? [])
+                .slice(0, 3)
+                .map((p: { provider_name: string }) => p.provider_name)
+            } catch {
+              // no providers
+            }
+          }
+
           return {
             ...rec,
             tmdb_id: match?.id ?? null,
             poster_url: match?.poster_path
               ? `https://image.tmdb.org/t/p/w185${match.poster_path}`
               : null,
+            providers,
+            watch_url,
+            in_theaters,
           }
         } catch {
-          return { ...rec, tmdb_id: null, poster_url: null }
+          return { ...rec, tmdb_id: null, poster_url: null, providers: [], watch_url: null, in_theaters: false }
         }
       })
     )

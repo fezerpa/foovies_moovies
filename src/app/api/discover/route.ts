@@ -23,15 +23,24 @@ export async function GET(req: NextRequest) {
   const sortBy = searchParams.get('sort_by') ?? 'vote_average.desc'
   const personId = searchParams.get('person')
   const genres = searchParams.get('genres')
+  const nowPlaying = searchParams.get('now_playing') === 'true'
+  const region = searchParams.get('region')
+  const provider = searchParams.get('provider')
+  const page = String(Math.min(Math.max(parseInt(searchParams.get('page') ?? '1', 10), 1), 500))
+
+  const TMDB_HEADERS = { Authorization: `Bearer ${process.env.TMDB_API_KEY}` }
 
   try {
     let url: string
 
-    if (query) {
+    if (nowPlaying && region) {
+      const params = new URLSearchParams({ language: 'es-ES', page, region })
+      url = `https://api.themoviedb.org/3/movie/now_playing?${params}`
+    } else if (query) {
       const params = new URLSearchParams({
         query,
         language: 'es-ES',
-        page: '1',
+        page,
         include_adult: 'false',
       })
       url = `https://api.themoviedb.org/3/search/movie?${params}`
@@ -44,18 +53,22 @@ export async function GET(req: NextRequest) {
         language: 'es-ES',
         sort_by: VALID_SORTS.has(sortBy) ? sortBy : 'vote_average.desc',
         'vote_count.gte': '150',
-        page: '1',
+        page,
       })
       if (yearFrom) params.set('primary_release_date.gte', `${yearFrom}-01-01`)
       if (yearTo) params.set('primary_release_date.lte', `${yearTo}-12-31`)
       if (minVote) params.set('vote_average.gte', minVote)
       if (personId) params.set('with_people', personId)
       if (genres) params.set('with_genres', genres.split(',').join('|'))
+      if (provider && region) {
+        params.set('with_watch_providers', provider)
+        params.set('watch_region', region)
+      }
       url = `https://api.themoviedb.org/3/discover/movie?${params}`
     }
 
     const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${process.env.TMDB_API_KEY}` },
+      headers: TMDB_HEADERS,
       next: { revalidate: 300 },
     })
 
@@ -68,7 +81,8 @@ export async function GET(req: NextRequest) {
 
     const data = await res.json()
     const results = ((data.results ?? []) as any[]).slice(0, 9).map(mapMovie)
-    return NextResponse.json({ results })
+    const has_more = (data.page ?? 1) < (data.total_pages ?? 1)
+    return NextResponse.json({ results, has_more })
   } catch {
     return NextResponse.json({ results: [], error: 'Error de red' }, { status: 500 })
   }

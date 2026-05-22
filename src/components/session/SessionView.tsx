@@ -558,7 +558,7 @@ export default function SessionView({
                     return (
                       <li
                         key={nom.nomination_id}
-                        className={`flex items-center gap-4 rounded-2xl border p-4 transition ${
+                        className={`flex gap-4 rounded-2xl border p-4 transition ${
                           isMyVote ? 'border-pink-700 bg-pink-950/30' : 'border-gray-800 bg-gray-900'
                         }`}
                       >
@@ -579,30 +579,30 @@ export default function SessionView({
                               style={{ width: `${barPct}%` }}
                             />
                           </div>
-                        </div>
-                        {session.status === 'open' && (
-                          <div className="flex shrink-0 gap-2">
-                            {nom.nomination_id === myNominationId && (
+                          {session.status === 'open' && (
+                            <div className="mt-3 flex flex-wrap gap-2">
+                              {nom.nomination_id === myNominationId && (
+                                <button
+                                  onClick={handleRemoveNomination}
+                                  className="rounded-xl border border-gray-700 px-4 py-2 text-sm font-semibold transition hover:border-red-600 hover:text-red-400"
+                                >
+                                  Eliminar
+                                </button>
+                              )}
                               <button
-                                onClick={handleRemoveNomination}
-                                className="rounded-xl border border-gray-700 px-4 py-2 text-sm font-semibold transition hover:border-red-600 hover:text-red-400"
+                                onClick={() => handleVote(nom.nomination_id)}
+                                disabled={voting}
+                                className={`rounded-xl px-4 py-2 text-sm font-semibold transition disabled:opacity-50 ${
+                                  isMyVote
+                                    ? 'bg-green-600 hover:bg-green-700'
+                                    : 'border border-gray-700 hover:border-green-600 hover:text-green-400'
+                                }`}
                               >
-                                Eliminar
+                                {isMyVote ? '★ Mi voto' : 'Votar'}
                               </button>
-                            )}
-                            <button
-                              onClick={() => handleVote(nom.nomination_id)}
-                              disabled={voting}
-                              className={`rounded-xl px-4 py-2 text-sm font-semibold transition disabled:opacity-50 ${
-                                isMyVote
-                                  ? 'bg-green-600 hover:bg-green-700'
-                                  : 'border border-gray-700 hover:border-green-600 hover:text-green-400'
-                              }`}
-                            >
-                              {isMyVote ? '★ Mi voto' : 'Votar'}
-                            </button>
-                          </div>
-                        )}
+                            </div>
+                          )}
+                        </div>
                       </li>
                     )
                   })}
