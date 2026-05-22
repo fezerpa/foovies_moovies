@@ -92,21 +92,33 @@ export default async function ProfilePage() {
             <p className="mb-5 text-sm leading-relaxed text-gray-300 italic">"{tasteSummary}"</p>
           )}
           {tasteMovies.length > 0 && (
-            <div className="flex flex-wrap gap-3">
-              {tasteMovies.map((m) => (
-                <div key={m.tmdb_id} className="flex items-center gap-2 rounded-xl border border-gray-800 bg-gray-950 p-2">
-                  {m.poster_url ? (
-                    <img src={m.poster_url} alt={m.title} className="h-12 w-8 rounded-md object-cover" />
-                  ) : (
-                    <div className="h-12 w-8 rounded-md bg-gray-800" />
-                  )}
-                  <div>
-                    <p className="text-xs font-medium leading-tight">{m.title}</p>
-                    <p className="text-xs text-gray-500">{m.year}</p>
-                    <p className="text-xs font-semibold text-pink-400">{m.rating}/10</p>
-                  </div>
-                </div>
-              ))}
+            <div className="grid grid-cols-3 gap-3">
+              {tasteMovies.map((m) => {
+                const href = clubs[0]
+                  ? `/clubs/${clubs[0].invite_code}/session/discover/${m.tmdb_id}`
+                  : null
+                const card = (
+                  <>
+                    {m.poster_url ? (
+                      <img src={m.poster_url} alt={m.title} className="aspect-[2/3] w-full object-cover" />
+                    ) : (
+                      <div className="aspect-[2/3] w-full bg-gray-800" />
+                    )}
+                    <div className="flex flex-1 flex-col p-3">
+                      <p className="line-clamp-2 text-sm font-semibold leading-snug">{m.title}</p>
+                      <p className="mt-1 text-xs text-gray-500">{m.year}</p>
+                      <p className="mt-auto pt-2 text-sm font-bold text-pink-400">
+                        {m.rating}<span className="ml-0.5 text-xs font-normal text-gray-500">/10</span>
+                      </p>
+                    </div>
+                  </>
+                )
+                return href ? (
+                  <Link key={m.tmdb_id} href={href} className="movie-card">{card}</Link>
+                ) : (
+                  <div key={m.tmdb_id} className="movie-card">{card}</div>
+                )
+              })}
             </div>
           )}
           <Link

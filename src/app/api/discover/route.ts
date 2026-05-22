@@ -28,9 +28,7 @@ export async function GET(req: NextRequest) {
   const provider = searchParams.get('provider')
   const page = String(Math.min(Math.max(parseInt(searchParams.get('page') ?? '1', 10), 1), 500))
 
-  const apiKey = process.env.TMDB_API_KEY
-  console.log('[discover] TMDB_API_KEY present:', !!apiKey, '| length:', apiKey?.length ?? 0, '| prefix:', apiKey?.slice(0, 8))
-  const TMDB_HEADERS = { Authorization: `Bearer ${apiKey}` }
+  const TMDB_HEADERS = { Authorization: `Bearer ${process.env.TMDB_API_KEY}` }
 
   try {
     let url: string
@@ -75,8 +73,6 @@ export async function GET(req: NextRequest) {
     })
 
     if (!res.ok) {
-      const body = await res.text()
-      console.log('[discover] TMDB error:', res.status, res.statusText, '| body:', body)
       return NextResponse.json(
         { results: [], error: `TMDB ${res.status}: ${res.statusText}` },
         { status: res.status }
