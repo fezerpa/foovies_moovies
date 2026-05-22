@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\flzpv\\\\foovies\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(sed -i 's/mx-auto max-w-3xl px-4 py-12/mx-auto max-w-4xl px-4 py-12/g' \\\\ *)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\flzpv\\foovies\\src\\app\\clubs\\[id]"
     ]
   }
 }

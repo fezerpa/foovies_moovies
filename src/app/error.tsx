@@ -1,0 +1,25 @@
+'use client'
+
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  return (
+    <main className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
+      <p className="mb-2 text-6xl font-bold text-gray-700">500</p>
+      <h1 className="mb-2 text-2xl font-bold">Algo fue mal</h1>
+      <p className="mb-6 max-w-sm text-gray-400">
+        {error.message ?? 'Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo.'}
+      </p>
+      <button
+        onClick={reset}
+        className="rounded-xl bg-pink-600 px-5 py-2.5 text-sm font-semibold transition hover:bg-pink-500"
+      >
+        Intentar de nuevo
+      </button>
+    </main>
+  )
+}

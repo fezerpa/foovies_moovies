@@ -18,7 +18,7 @@ export default async function ClubsPage() {
   const clubs = memberships?.map(m => ({ ...m.clubs, role: m.role })) ?? []
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
+    <main className="mx-auto max-w-4xl px-4 py-12">
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Mis clubs</h1>
         <form action="/auth/signout" method="post">

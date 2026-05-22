@@ -97,7 +97,7 @@ export default async function MovieDetailPage({
   )?.key ?? null
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
+    <main className="mx-auto max-w-4xl px-4 py-12">
       <Link
         href={`/clubs/${slug}/session/discover`}
         className="mb-8 inline-flex items-center gap-1 text-sm text-gray-400 transition hover:text-white"
