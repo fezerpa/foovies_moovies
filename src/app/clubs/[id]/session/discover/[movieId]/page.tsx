@@ -5,6 +5,7 @@ import NominateButton from '@/components/session/NominateButton'
 import CastSlider from '@/components/session/CastSlider'
 import MovieHero from '@/components/session/MovieHero'
 import MovieProviders from '@/components/session/MovieProviders'
+import SimilarMoviesSlider from '@/components/session/SimilarMoviesSlider'
 
 async function fetchMovieDetails(movieId: string) {
   const res = await fetch(
@@ -217,11 +218,23 @@ export default async function MovieDetailPage({
       )}
 
       {cast.length > 0 && (
-        <div>
+        <div className="mb-4">
           <h2 className="mb-4 font-semibold">Reparto principal</h2>
           <CastSlider cast={cast} clubSlug={slug} />
         </div>
       )}
+
+      <SimilarMoviesSlider
+        clubId={club.id}
+        clubSlug={slug}
+        movie={{
+          id: movie.id,
+          title: movie.title,
+          year: (movie.release_date as string | undefined)?.slice(0, 4) ?? '',
+          director: directors[0]?.name ?? '',
+          genres: (movie.genres ?? []).map((g: any) => g.name as string),
+        }}
+      />
     </main>
   )
 }
