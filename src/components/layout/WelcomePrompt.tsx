@@ -11,12 +11,12 @@ export default async function WelcomePrompt() {
   }
 
   const { count } = await supabase
-    .from('session_ratings')
+    .from('club_members')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', user.id)
 
   if ((count ?? 0) === 0) {
-    return <WelcomeModal type="no-movies" />
+    return <WelcomeModal type="no-clubs" />
   }
 
   return null
